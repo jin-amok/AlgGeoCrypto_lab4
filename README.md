@@ -49,35 +49,15 @@ hyperledger/fabric-baseos:latest
   -ccp ../asset-transfer-basic/chaincode-go -ccl go
 ```
 
-Chaincode `basic` v1.0 установлен на обоих пирах и зафиксирован на канале:
+![Deploy Chaincode](assets/deploy_chaincode.png)
 
-```
-Committed chaincode definition for chaincode 'basic' on channel 'mychannel':
-Version: 1.0, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc,
-Approvals: [Org1MSP: true, Org2MSP: true]
-```
+Chaincode `basic` v1.0 установлен на обоих пирах, одобрен Org1MSP и Org2MSP, зафиксирован на канале.
 
 ### 5. Создание тестового актива
 
-Инициализация реестра:
+Инициализация реестра (`InitLedger`), создание актива `asset7` и проверка запросом:
 
-```bash
-peer chaincode invoke ... -c '{"function":"InitLedger","Args":[]}'
-# result: status:200
-```
-
-Создание нового актива:
-
-```bash
-peer chaincode invoke ... -c '{"function":"CreateAsset","Args":["asset7","purple","20","Student","1000"]}'
-# result: status:200
-```
-
-Чтение актива:
-
-```bash
-peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset7"]}'
-```
+![Assets](assets/assets.png)
 
 ```json
 {"AppraisedValue":1000,"Color":"purple","ID":"asset7","Owner":"Student","Size":20}
@@ -85,13 +65,6 @@ peer chaincode query -C mychannel -n basic -c '{"Args":["ReadAsset","asset7"]}'
 
 ### 6. Результат docker ps
 
-```
-NAMES                                           IMAGE                              STATUS        PORTS
-dev-peer0.org2.example.com-basic_1.0-41fd...   dev-peer0.org2...-basic_1.0-...   Up 3 minutes
-dev-peer0.org1.example.com-basic_1.0-41fd...   dev-peer0.org1...-basic_1.0-...   Up 3 minutes
-orderer.example.com                             hyperledger/fabric-orderer:2.5.9  Up 11 minutes 0.0.0.0:7050->7050/tcp
-peer0.org1.example.com                          hyperledger/fabric-peer:latest    Up 11 minutes 0.0.0.0:7051->7051/tcp
-peer0.org2.example.com                          hyperledger/fabric-peer:latest    Up 11 minutes 0.0.0.0:9051->9051/tcp
-```
+![Docker PS](assets/docker_ps.png)
 
 Всего 5 контейнеров: orderer, 2 пира и 2 chaincode-контейнера (по одному на каждый пир).
